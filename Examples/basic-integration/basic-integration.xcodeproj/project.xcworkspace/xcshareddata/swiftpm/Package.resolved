@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "anycodable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Flight-School/AnyCodable",
+      "state" : {
+        "revision" : "862808b2070cd908cb04f9aafe7de83d35f81b05",
+        "version" : "0.6.7"
+      }
+    },
+    {
+      "identity" : "deuna-ios-client",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/deuna-developers/deuna-ios-client",
+      "state" : {
+        "revision" : "ce6308262b9416f30f7ccb6e2c7cd55740e1145e",
+        "version" : "1.3.8"
+      }
+    },
+    {
+      "identity" : "deuna-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/deuna-developers/deuna-sdk-ios",
+      "state" : {
+        "revision" : "fcfd4991a16ba1d039414a19369be87a87101790",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 2
+}
