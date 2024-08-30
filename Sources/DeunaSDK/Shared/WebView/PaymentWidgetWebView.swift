@@ -1,0 +1,69 @@
+
+import WebKit
+
+
+
+class PaymentWidgetViewController: BaseWebViewController, WKScriptMessageHandler {
+    let callbacks: PaymentWidgetCallbacks
+    
+    var refetchOrderRequestId = 0
+    
+    /// dictionary to save the refetch order requests
+    var refetchOrderRequests: [Int: ((Json?) -> Void)?] = [:]
+
+    init(callbacks: PaymentWidgetCallbacks) {
+        self.callbacks = callbacks
+        super.init()
+        configuration.userContentController.add(self, name: "xprops")
+        configuration.userContentController.add(self, name: "consoleLog")
+        configuration.userContentController.add(self, name: "refetchOrder")
+    }
+    
+    override func onLoadError(code: Int, message: String) {
+        // Notify error callback for any navigation failure
+        callbacks.onError?(
+            PaymentsError(
+                type: .errorWhileLoadingTheURL,
+                metadata: PaymentsError.ErrorMetadata(
+                    code: "\(code)",
+                    message: message
+                )
+            )
+        )
+    }
+    
+    /// Handler for receiving JavaScript messages.
+    ///
+    /// - Parameters:
+    ///   - userContentController: The user content controller.
+    ///   - message: The message received.
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        if message.name == "consoleLog" {
+            if let messageBody = message.body as? String {
+                DeunaLogs.debug("JavaScript console.log: \(messageBody)")
+            }
+            return
+        }
+       
+        guard let messageData = getMessageData(message: message) else {
+            return
+        }
+        
+        handleEventData(message: messageData)
+    }
+    
+    /// send the custom css  styles to the payment widget link
+    func setCustomCss(data: Json) {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                webView?.evaluateJavaScript("javascript:setCustomCss(\(jsonString),'*')")
+            }
+        } catch {
+            DeunaLogs.error(error.localizedDescription)
+        }
+    }
+}
