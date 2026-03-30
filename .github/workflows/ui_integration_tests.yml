@@ -1,0 +1,124 @@
+name: UI Integration Tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ui-tests:
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+
+    - name: Cache SPM dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/Library/Caches/org.swift.swiftpm
+          ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Boot simulator and resolve dependencies
+      env:
+        SIMULATOR_NAME: iPhone 16 Pro Max
+      run: |
+        # Boot simulator by name (faster than detecting)
+        xcrun simctl boot "$SIMULATOR_NAME" || true &
+        
+        # Resolve dependencies in parallel
+        cd Examples/deuna-show-widgtes-in-modal
+        xcodebuild -resolvePackageDependencies \
+          -project deuna-show-widgtes-in-modal.xcodeproj \
+          -scheme deuna-show-widgtes-in-modal
+        
+        # Wait for simulator boot to complete
+        wait
+
+    - name: Build and run UI tests
+      id: run_tests
+      continue-on-error: true
+      env:
+        SIMULATOR_NAME: iPhone 16 Pro Max
+      run: |
+        VIDEO_DIR="$GITHUB_WORKSPACE/artifacts/test-videos"
+        VIDEO_PATH="$VIDEO_DIR/ui-integration-tests.mov"
+        mkdir -p "$VIDEO_DIR"
+        rm -f "$VIDEO_PATH"
+
+        # Start simulator recording in background (same idea as Android workflow).
+        xcrun simctl io booted recordVideo --codec=h264 "$VIDEO_PATH" >/tmp/ios-sim-record.log 2>&1 &
+        RECORDING_PID=$!
+
+        stop_recording() {
+          kill -INT "$RECORDING_PID" >/dev/null 2>&1 || true
+          wait "$RECORDING_PID" >/dev/null 2>&1 || true
+        }
+
+        trap stop_recording EXIT
+
+        cd Examples/deuna-show-widgtes-in-modal
+        set -o pipefail
+        xcodebuild test \
+          -project deuna-show-widgtes-in-modal.xcodeproj \
+          -scheme deuna-show-widgtes-in-modal \
+          -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
+          -resultBundlePath TestResults.xcresult \
+          -only-testing:DeunaSDKIntegrationTests \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          ONLY_ACTIVE_ARCH=YES \
+          2>&1 | tee xcodebuild.log | xcpretty --color
+
+        TEST_EXIT_CODE=${PIPESTATUS[0]}
+        stop_recording
+        trap - EXIT
+        exit "$TEST_EXIT_CODE"
+
+    - name: Validate test results
+      run: |
+        cd Examples/deuna-show-widgtes-in-modal
+        
+        # Check for TEST SUCCEEDED in the log - this is the most reliable indicator
+        if grep -q "TEST SUCCEEDED" xcodebuild.log; then
+          echo "✅ All tests passed!"
+          exit 0
+        fi
+        
+        # If no TEST SUCCEEDED, check for failures
+        if grep -q "TEST FAILED" xcodebuild.log || grep -q "Failing tests:" xcodebuild.log; then
+          echo "❌ Error: Some tests failed!"
+          exit 1
+        fi
+        
+        # If neither succeeded nor failed explicitly, check xcodebuild exit status
+        if [ "${{ steps.run_tests.outcome }}" != "success" ]; then
+          echo "❌ Error: xcodebuild test failed!"
+          exit 1
+        fi
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          Examples/deuna-show-widgtes-in-modal/TestResults.xcresult
+          Examples/deuna-show-widgtes-in-modal/xcodebuild.log
+        retention-days: 7
+
+    - name: Upload test video
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ui-test-video
+        path: artifacts/test-videos/ui-integration-tests.mov
+        if-no-files-found: ignore
+        retention-days: 7
