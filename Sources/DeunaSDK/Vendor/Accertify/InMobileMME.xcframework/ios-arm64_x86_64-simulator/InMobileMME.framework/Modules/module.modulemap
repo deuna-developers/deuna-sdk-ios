@@ -1,0 +1,25 @@
+//
+//  InMobileMMEPrivate.modulemap
+//  InMobileMME
+//
+//  Created on 5/28/24.
+//  Copyright © 2024 Accertify, Inc. All rights reserved.
+//  
+
+framework module InMobileMME {
+    umbrella header "InMobileMME.h"
+    
+    export *
+    module * { export * }
+    
+    explicit module InMobileMMEPrivate {
+        header "ArxanActions.h"
+
+        export *
+    }
+}
+
+module InMobileMME.Swift {
+  header "InMobileMME-Swift.h"
+  requires objc
+}
