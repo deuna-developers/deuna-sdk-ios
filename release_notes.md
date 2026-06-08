@@ -1,0 +1,1 @@
+**Full Changelog**: https://github.com/DUNA-E-Commmerce/deuna-sdk-ios/compare/v2.12.1...v2.12.2-beta.0
