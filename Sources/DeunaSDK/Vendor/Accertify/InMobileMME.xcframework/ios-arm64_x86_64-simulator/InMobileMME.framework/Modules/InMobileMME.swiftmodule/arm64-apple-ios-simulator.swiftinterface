@@ -1,0 +1,378 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.1.2 effective-5.10 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+// swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name InMobileMME
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -interface-compiler-version 6.1.2
+import AVFoundation
+import AVKit
+import CallKit
+import SystemConfiguration.CaptiveNetwork
+import CoreAudio
+import CoreBluetooth
+import CoreImage
+import CoreLocation
+import CoreML
+import CoreMotion
+import CryptoKit
+import DeviceCheck
+import Foundation
+@_exported import InMobileMME
+import InMobileMME.InMobileMMEPrivate
+import LocalAuthentication
+import MachO
+import NetworkExtension
+import OSLog
+import QuartzCore
+import Security
+import StoreKit
+import Swift
+import SwiftUI
+import SystemConfiguration
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import zlib
+@objc public enum InMobileDeviceState : Swift.Int16 {
+  case rooted = 4
+  case notRooted = -5
+  case malwareDetected = 8
+  case noMalwareDetected = -9
+  case rootedAndCloaked = 32
+  case notCloaked = -33
+  case notRootedNoMalwareDetected = 64
+  public init?(rawValue: Swift.Int16)
+  public typealias RawValue = Swift.Int16
+  public var rawValue: Swift.Int16 {
+    get
+  }
+}
+@objc public enum InMobileRootState : Swift.Int {
+  case error = 2
+  case rooted = 4
+  case notRooted = -5
+  case compromised = 16
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum InMobileMalwareState : Swift.Int {
+  case error = 2
+  case malwareDetected = 8
+  case noMalwareDetected = -9
+  case compromised = 16
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum InMobileAuthType : Swift.UInt16 {
+  case biometrics = 1
+  case biometricsPasscode = 2
+  public init?(rawValue: Swift.UInt16)
+  public typealias RawValue = Swift.UInt16
+  public var rawValue: Swift.UInt16 {
+    get
+  }
+}
+@objc public enum InMobileAuthError : Swift.Int {
+  case failed = 0
+  case unsupported = 1
+  case unrecognizedType = 2
+  case unsupportedOsVersion = 4
+  case unsupportedOsFeature = 8
+  case fallback = 16
+  case canceled = 32
+  case passcodeNotSet = 64
+  case notEnrolled = 128
+  case unknown = 256
+  case invalid = 512
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum InMobileSDKLicense : Swift.UInt64 {
+  case notFound = 20006
+  case expired = 20007
+  case inMobileNotProvisioned = 20009
+  case inAuthenticateNotProvisioned = 20010
+  case ubaNotProvisioned = 20011
+  case fidoNotProvisioned = 20013
+  public init?(rawValue: Swift.UInt64)
+  public typealias RawValue = Swift.UInt64
+  public var rawValue: Swift.UInt64 {
+    get
+  }
+}
+@objc public enum MLEventType : Swift.Int, Swift.RawRepresentable, Swift.Codable {
+  case accountCreate
+  case accountUpdate
+  case chargeback
+  case giftCardBalance
+  case listingCreate
+  case listingUpdate
+  case login
+  case logout
+  case passwordForgot
+  case passwordUpdate
+  case payment
+  case transfer
+  case usernameForgot
+  case verification
+  case withdrawal
+  public typealias RawValue = Swift.String
+  public var rawValue: InMobileMME.MLEventType.RawValue {
+    get
+  }
+  public init?(rawValue: InMobileMME.MLEventType.RawValue)
+}
+@objc @_inheritsConvenienceInitializers public class InMobileTypes : ObjectiveC.NSObject {
+  @objc public class func malwareState(toString state: InMobileMME.InMobileMalwareState) -> Swift.String
+  @objc public class func rootState(toString state: InMobileMME.InMobileRootState) -> Swift.String
+  @objc public class func deviceState(toString state: InMobileMME.InMobileDeviceState) -> Swift.String
+  @objc public class func authState(toString state: InMobileMME.InMobileAuthError) -> Swift.String
+  @objc public class func logType(toString logChoiceSet: InMobileMME.InMobileLogSet) -> Swift.String
+  @objc public class func licenseErrorReason(_ value: InMobileMME.InMobileSDKLicense) -> Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class MME : ObjectiveC.NSObject {
+  @objc public init(accountId: Swift.String, applicationId appId: Swift.String? = nil, advertisingId adId: Swift.String? = nil, andJSONKeys jsonKeys: Foundation.Data? = nil) throws
+  @objc(generateListRequestPayload:withError:) public func generateListRequestPayload(_ type: InMobileMME.InMobileListSet) throws -> InMobileMME.OpaqueObjectRef
+  @objc(generateListRequestPayload:version:withError:) public func generateListRequestPayload(_ type: InMobileMME.InMobileListSet, version: Swift.String?) throws -> InMobileMME.OpaqueObjectRef
+  @objc(listVersion:withError:) public func listVersion(_ type: InMobileMME.InMobileListSet) throws -> Swift.String
+  public func generateLogPayload(_ logChoices: InMobileMME.InMobileLogSet = .serverLog, withCustomLog customLog: [Swift.AnyHashable : Any]? = nil, transactionId transId: Swift.String? = nil, eventType: InMobileMME.MLEventType? = nil) throws -> InMobileMME.OpaqueObjectRef
+  @discardableResult
+  @objc(handlePayload:onError:) public func handlePayload(_ payload: InMobileMME.OpaqueObjectRef) throws -> [Swift.AnyHashable : Any]
+  public func isRegistered() throws -> Swift.Bool
+  @objc public func generateRegistrationPayload(forInAuthenticate: Swift.Bool = false, deviceToken: Swift.String? = nil, customLog: [Swift.AnyHashable : Any]? = nil) throws -> InMobileMME.OpaqueObjectRef
+  @objc(generateRegistrationPayloadWithCustomLog:onError:) public func generateRegistrationPayload(withCustomLog customLog: [Swift.AnyHashable : Any]? = nil) throws -> InMobileMME.OpaqueObjectRef
+  @discardableResult
+  @objc public func unRegister() -> InMobileMME.OpaqueObjectRef?
+  public func rootDetectionState() throws -> InMobileMME.InMobileRootState
+  public func malwareDetectionState() throws -> InMobileMME.InMobileMalwareState
+  @objc(detectedMalwareListWithError:) public func detectedMalwareList() throws -> [Swift.AnyHashable : Any]
+  public func deviceStateVerification(_ deviceState: InMobileMME.InMobileDeviceState) throws -> Swift.Bool
+  @available(iOS 14.0, *)
+  @objc public func localRiskRun(for event: InMobileMME.MLEventType) throws -> [Swift.Double]
+  public func isBiometricsEnrolled() throws -> Swift.Bool
+  @objc public func authenticate(_ type: InMobileMME.InMobileAuthType, onCompletion complete: ((Swift.Bool, (any Swift.Error)?) -> Swift.Void)? = nil)
+  public func authenticate(_ type: InMobileMME.InMobileAuthType) async throws -> Swift.Bool
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc convenience public init?(withAccountId accountId: Swift.String!, applicationId appId: Swift.String?)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc convenience public init?(withAccountId accountId: Swift.String!, applicationId appId: Swift.String?, advertisingId adId: Swift.String?)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc convenience public init?(withAccountId accountId: Swift.String!, applicationId appId: Swift.String?, andJSONKeys jsonKeys: Foundation.Data?)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc convenience public init?(withAccountId accountId: Swift.String!, applicationId appId: Swift.String?, advertisingId adId: Swift.String?, andJSONKeys jsonKeys: Foundation.Data?)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func isRegistered(_ errorPointer: Foundation.NSErrorPointer) -> Swift.Bool
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func generateRegistrationPayload(_ errorPointer: Foundation.NSErrorPointer) -> InMobileMME.OpaqueObjectRef?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func generateLogPayload(_ logChoices: InMobileMME.InMobileLogSet, withCustomLog customLog: [Swift.AnyHashable : Any]?, transactionId transId: Swift.String?, withError errorPointer: Foundation.NSErrorPointer) -> InMobileMME.OpaqueObjectRef?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func generateLogPayload(_ logChoices: InMobileMME.InMobileLogSet, withCustomLog customLog: [Swift.AnyHashable : Any]?, transactionId transId: Swift.String?, eventType event: InMobileMME.MLEventType, withError errorPointer: Foundation.NSErrorPointer) -> InMobileMME.OpaqueObjectRef?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func generateLogPayload(_ logChoices: InMobileMME.InMobileLogSet, withError errorPointer: Foundation.NSErrorPointer) -> InMobileMME.OpaqueObjectRef?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func rootDetectionState(withError errorPointer: Foundation.NSErrorPointer) -> InMobileMME.InMobileRootState
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func malwareDetectionState(withError errorPointer: Foundation.NSErrorPointer) -> InMobileMME.InMobileMalwareState
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func deviceStateVerification(_ deviceState: InMobileMME.InMobileDeviceState, withError errorPointer: Foundation.NSErrorPointer) -> Swift.Bool
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func isBiometricsEnrolled(_ errorPointer: Foundation.NSErrorPointer) -> Swift.Bool
+  @objc deinit
+}
+extension InMobileMME.MME {
+  public func isDeviceTokenUpdated(_ deviceToken: Swift.String?) throws -> Swift.Bool
+  @objc(generateUpdateDeviceTokenPayloadWithDeviceToken:onError:) dynamic public func generateUpdateDeviceTokenPayload(withDeviceToken deviceToken: Swift.String?) throws -> InMobileMME.OpaqueObjectRef
+  @objc dynamic public func generatePendingMessagesRequest(withUID uid: Swift.String? = nil) throws -> InMobileMME.OpaqueObjectRef
+  @objc(generateCustomerResponsePayloadFor:eventId:priority:response:onError:) dynamic public func generateCustomerResponsePayload(for message: InMobileMME.InAuthenticateMessage, eventId: Swift.String? = nil, priority: Swift.String? = nil, response: Swift.String) throws -> InMobileMME.OpaqueObjectRef
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc dynamic public func isDeviceTokenUpdated(_ deviceToken: Swift.String?, onError errorPointer: Foundation.NSErrorPointer) -> Swift.Bool
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc dynamic public func generatePendingMessagesRequest(_ errorPointer: Foundation.NSErrorPointer) -> InMobileMME.OpaqueObjectRef?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc dynamic public func generateCustomerResponsePayload(for message: InMobileMME.InAuthenticateMessage!, response: Swift.String, onError errorPointer: Foundation.NSErrorPointer) -> InMobileMME.OpaqueObjectRef?
+}
+extension Foundation.Data {
+  @inlinable internal init?(base64URLEncoded base64URLString: Swift.String, options: Foundation.Data.Base64DecodingOptions = []) {
+        var base64String = base64URLString
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        if base64String.count % 4 != 0 {
+            base64String.append(String(repeating: "=", count: 4 - base64String.count % 4))
+        }
+        self.init(base64Encoded: base64String)
+    }
+  @inlinable internal func base64URLEncodedString(options: Foundation.Data.Base64EncodingOptions = []) -> Swift.String {
+        return self.base64EncodedString(options: options)
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
+    }
+}
+infix operator ?! : NilCoalescingPrecedence
+@objc public enum InMobileDebugLevel : Swift.Int {
+  case info = 0
+  case warning
+  case error
+  case none
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers final public class InMobileError : Swift.CustomStringConvertible {
+  public enum Code : Swift.Int {
+    case unknown
+    case failed
+    case invalidConfig
+    case invalidParameter
+    case serverError
+    case invalidResponse
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  final public var code: InMobileMME.InMobileError.Code
+  final public var description: Swift.String
+  final public var debugDescription: Swift.String {
+    get
+  }
+  final public var internalErrorCodes: [Swift.Int] {
+    get
+  }
+  @objc deinit
+}
+extension InMobileMME.InMobileError : Foundation.CustomNSError {
+  final public var errorDescription: Swift.String? {
+    get
+  }
+  final public var errorCode: Swift.Int {
+    get
+  }
+  public static var errorDomain: Swift.String {
+    get
+  }
+  final public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+@objc public class InAuthenticateMessage : ObjectiveC.NSObject {
+  @objc final public let body: Swift.String
+  @objc final public let confirmationID: Swift.String
+  @objc final public let contentType: Swift.String
+  @objc final public let timeStamp: Swift.Int
+  @objc public init?(dictionary item: [Swift.AnyHashable : Any])
+  @objc public func getDate() -> Foundation.Date
+  @objc deinit
+}
+@objc public class MMEBurstReceipt : ObjectiveC.NSObject, Swift.Codable {
+  final public let transactionID: Swift.String
+  public init(transactionID: Swift.String)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc public class MMEWrapperConfiguration : ObjectiveC.NSObject, Swift.Codable {
+  @objc(MMEWrapperConfigurationServerKeyData) public class ServerKeyData : ObjectiveC.NSObject, Swift.Codable {
+    @objc public init(encryptionPubKeyType: Swift.String, encryptionPubKey: Swift.String, encryptionAlgorithm: Swift.String? = nil, signatureType: Swift.String, signature: Swift.String, signingPubKeyType: Swift.String, signingPubKey: Swift.String)
+    @objc deinit
+    public func encode(to encoder: any Swift.Encoder) throws
+    required public init(from decoder: any Swift.Decoder) throws
+  }
+  @available(swift, obsoleted: 1.0)
+  @objc convenience public init(accountID: Swift.String, serverKeyData: InMobileMME.MMEWrapperConfiguration.ServerKeyData, applicationID: Swift.String? = nil, registrationURL: Foundation.URL, logURL: Foundation.URL)
+  @available(swift, obsoleted: 1.0)
+  @objc convenience public init(accountID: Swift.String, serverKeyData: InMobileMME.MMEWrapperConfiguration.ServerKeyData, applicationID: Swift.String? = nil, registrationURL: Foundation.URL, logURL: Foundation.URL, automaticUpdateInterval: Swift.Int)
+  public init(accountID: Swift.String, serverKeyData: InMobileMME.MMEWrapperConfiguration.ServerKeyData, applicationID: Swift.String? = nil, registrationURL: Foundation.URL?, logURL: Foundation.URL?, burstURL: Foundation.URL? = nil, automaticUpdateInterval: Swift.Int? = nil, skipPermissionPromptsForNotDetermined: Swift.Bool? = nil)
+  @available(swift, obsoleted: 1.0)
+  @objc convenience public init(accountID: Swift.String, serverKeyData: InMobileMME.MMEWrapperConfiguration.ServerKeyData, applicationID: Swift.String? = nil, registrationURL: Foundation.URL?, logURL: Foundation.URL?, burstURL: Foundation.URL?, automaticUpdateInterval: Swift.Int)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class MMEWrapper : ObjectiveC.NSObject {
+  @objc public static var debugLevel: InMobileMME.InMobileDebugLevel {
+    @objc get
+    @objc set
+  }
+  @objc public static func setup(with configuration: InMobileMME.MMEWrapperConfiguration? = nil) throws
+  @objc public static func start(with configuration: InMobileMME.MMEWrapperConfiguration? = nil, onCompletion: (((any Swift.Error)?) -> ())? = nil)
+  public static func start(with configuration: InMobileMME.MMEWrapperConfiguration? = nil) async throws
+  @objc public static func sendDeviceData(for logs: InMobileMME.InMobileLogSet = .serverLog, with transactionID: Swift.String? = nil, onCompletion: (([Swift.AnyHashable : Any]?, (any Swift.Error)?) -> ())? = nil)
+  public static func sendDeviceData(for logs: InMobileMME.InMobileLogSet = .serverLog, with transactionID: Swift.String? = nil) async throws -> [Swift.AnyHashable : Any]?
+  @objc public static func sendBurstData(for logs: InMobileMME.InMobileLogSet = [], with transactionID: Swift.String? = nil, onCompletion: @escaping (InMobileMME.MMEBurstReceipt?, (any Swift.Error)?) -> ())
+  public static func sendBurstData(for logs: InMobileMME.InMobileLogSet = [], with transactionID: Swift.String? = nil) async throws -> InMobileMME.MMEBurstReceipt?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public static func start(onCompletion: (((any Swift.Error)?) -> ())? = nil)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc public class MMEController : InMobileMME.MME {
+  public typealias onCompletion = ((any Swift.Error)?) -> Swift.Void
+  public typealias listCompletion = ([Swift.AnyHashable : Any]?, (any Swift.Error)?) -> Swift.Void
+  public typealias logCompletion = ([Swift.AnyHashable : Any]?, (any Swift.Error)?) -> Swift.Void
+  public typealias onSendComplete = ([Swift.AnyHashable : Any]?, (any Swift.Error)?) -> Swift.Void
+  public typealias onMessagesReceived = ([InMobileMME.InAuthenticateMessage]?, (any Swift.Error)?) -> Swift.Void
+  @objc public func initiate(on url: Foundation.URL, customLog: [Swift.AnyHashable : Any]? = nil, forInAuthenticate: Swift.Bool = false, deviceToken: Swift.String? = nil, onCompletion: @escaping InMobileMME.MMEController.onCompletion)
+  public func initiate(on url: Foundation.URL, customLog: [Swift.AnyHashable : Any]? = nil, forInAuthenticate: Swift.Bool = false, deviceToken: Swift.String? = nil) async throws
+  public func sendLogs(_ logChoices: InMobileMME.InMobileLogSet = .serverLog, customLog: [Swift.AnyHashable : Any]? = nil, transactionId: Swift.String? = nil, to url: Foundation.URL, eventType: InMobileMME.MLEventType? = nil, onCompletion completion: @escaping InMobileMME.MMEController.onCompletion)
+  public func sendLogs(url: Foundation.URL, logChoices: InMobileMME.InMobileLogSet = .serverLog, customLog: [Swift.AnyHashable : Any]? = nil, transactionId: Swift.String? = nil, eventType: InMobileMME.MLEventType? = nil, completion: @escaping InMobileMME.MMEController.logCompletion)
+  public func sendLogs(_ logChoices: InMobileMME.InMobileLogSet = .serverLog, customLog: [Swift.AnyHashable : Any]? = nil, transactionId: Swift.String? = nil, to url: Foundation.URL, eventType: InMobileMME.MLEventType? = nil) async throws
+  public func sendLogs(url: Foundation.URL, logChoices: InMobileMME.InMobileLogSet = .serverLog, customLog: [Swift.AnyHashable : Any]? = nil, transactionId: Swift.String? = nil, eventType: InMobileMME.MLEventType? = nil) async throws -> [Swift.AnyHashable : Any]?
+  @objc(updateList:fromUrl:onCompletion:) public func updateList(_ selections: InMobileMME.InMobileListSet = .all, from url: Foundation.URL, onCompletion completion: @escaping InMobileMME.MMEController.listCompletion)
+  public func updateList(_ selections: InMobileMME.InMobileListSet = .all, from url: Foundation.URL) async throws -> [Swift.AnyHashable : Any]?
+  @objc public func fetchPendingMessages(from url: Foundation.URL, for uid: Swift.String? = nil, completionHandler: @escaping InMobileMME.MMEController.onMessagesReceived)
+  public func fetchPendingMessages(from url: Foundation.URL, for uid: Swift.String? = nil) async throws -> [InMobileMME.InAuthenticateMessage]?
+  @objc(sendCustomerResponse:forMessage:eventId:priority:toURL:onCompletion:) public func sendCustomerResponse(_ response: Swift.String, for message: InMobileMME.InAuthenticateMessage, eventId: Swift.String? = nil, priority: Swift.String? = nil, to url: Foundation.URL, onCompletion complete: @escaping InMobileMME.MMEController.onSendComplete)
+  public func sendCustomerResponse(_ response: Swift.String, for message: InMobileMME.InAuthenticateMessage, eventId: Swift.String? = nil, priority: Swift.String? = nil, to url: Foundation.URL) async throws -> [Swift.AnyHashable : Any]?
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func initiate(onURL url: Foundation.URL!, onCompletion complete: InMobileMME.MMEController.onCompletion!)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func initiate(onURL url: Foundation.URL!, customLog: [Swift.AnyHashable : Any]? = nil, onCompletion complete: InMobileMME.MMEController.onCompletion!)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func sendLogs(_ logChoices: InMobileMME.InMobileLogSet, customLog: [Swift.AnyHashable : Any]?, transactionId transId: Swift.String?, toUrl url: Foundation.URL!, onCompletion complete: InMobileMME.MMEController.onCompletion!)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func sendLogs(_ logChoices: InMobileMME.InMobileLogSet, customLog: [Swift.AnyHashable : Any]?, transactionId transId: Swift.String?, toUrl url: Foundation.URL!, eventType: InMobileMME.MLEventType, onCompletion complete: InMobileMME.MMEController.onCompletion!)
+  @available(swift, obsoleted: 1.0)
+  @_documentation(visibility: internal) @objc public func sendCustomerResponse(_ response: Swift.String!, forMessage message: InMobileMME.InAuthenticateMessage!, toURL url: Foundation.URL!, onCompletion complete: InMobileMME.MMEController.onSendComplete!)
+  @objc override public init(accountId: Swift.String, applicationId appId: Swift.String? = nil, advertisingId adId: Swift.String? = nil, andJSONKeys jsonKeys: Foundation.Data? = nil) throws
+  @objc deinit
+}
+extension InMobileMME.InMobileDeviceState : Swift.Equatable {}
+extension InMobileMME.InMobileDeviceState : Swift.Hashable {}
+extension InMobileMME.InMobileDeviceState : Swift.RawRepresentable {}
+extension InMobileMME.InMobileRootState : Swift.Equatable {}
+extension InMobileMME.InMobileRootState : Swift.Hashable {}
+extension InMobileMME.InMobileRootState : Swift.RawRepresentable {}
+extension InMobileMME.InMobileMalwareState : Swift.Equatable {}
+extension InMobileMME.InMobileMalwareState : Swift.Hashable {}
+extension InMobileMME.InMobileMalwareState : Swift.RawRepresentable {}
+extension InMobileMME.InMobileAuthType : Swift.Equatable {}
+extension InMobileMME.InMobileAuthType : Swift.Hashable {}
+extension InMobileMME.InMobileAuthType : Swift.RawRepresentable {}
+extension InMobileMME.InMobileAuthError : Swift.Equatable {}
+extension InMobileMME.InMobileAuthError : Swift.Hashable {}
+extension InMobileMME.InMobileAuthError : Swift.RawRepresentable {}
+extension InMobileMME.InMobileSDKLicense : Swift.Equatable {}
+extension InMobileMME.InMobileSDKLicense : Swift.Hashable {}
+extension InMobileMME.InMobileSDKLicense : Swift.RawRepresentable {}
+extension InMobileMME.MLEventType : Swift.Equatable {}
+extension InMobileMME.MLEventType : Swift.Hashable {}
+extension InMobileMME.InMobileDebugLevel : Swift.Equatable {}
+extension InMobileMME.InMobileDebugLevel : Swift.Hashable {}
+extension InMobileMME.InMobileDebugLevel : Swift.RawRepresentable {}
+extension InMobileMME.InMobileError.Code : Swift.Equatable {}
+extension InMobileMME.InMobileError.Code : Swift.Hashable {}
+extension InMobileMME.InMobileError.Code : Swift.RawRepresentable {}
